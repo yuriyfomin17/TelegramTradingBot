@@ -9,9 +9,6 @@ import telebot
 
 matplotlib.use('Agg')
 bot = telebot.TeleBot("PASTE_YOUR_BOT_TOKEN")
-c1 = types.BotCommand(command='start', description='Start the Bot')
-bot.set_my_commands([c1])
-bot.infinity_polling(none_stop=True)
 
 USER_INFO = {}
 
@@ -129,3 +126,7 @@ def reset_trading_data(chat_id):
         END_DATE_KEY: None
     }
 
+
+c1 = types.BotCommand(command='start', description='Start the Bot')
+bot.set_my_commands([c1])
+bot.infinity_polling(none_stop=True)
