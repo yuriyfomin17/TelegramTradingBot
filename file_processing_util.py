@@ -1,15 +1,10 @@
 from typing import Dict, List
 
-INITIAL_CAPITAL_USD = "INITIAL_CAPITAL_USD"
-CAPITAL_PORTIONS = "CAPITAL_PORTIONS"
-MAX_PERCENTAGE_DECLINE = "MAX_PERCENTAGE_DECLINE"
-TIMESTAMP = 'TIMESTAMP'
-OPEN = 'OPEN'
-CLOSE = 'CLOSE'
-FIRST_LINE_TRADING_DATA = 'OPEN,CLOSE,TIMESTAMP'
+from constants import *
+from helper_functions import convert_binance_timestamp_to_date
 
 
-def valid_csv_format(trading_data_str: str) -> bool:
+def is_valid_csv_format(trading_data_str: str) -> bool:
     if trading_data_str is None:
         return False
     trading_data_arr = convert_trading_str_to_array(trading_data_str)
@@ -31,12 +26,9 @@ def valid_csv_format(trading_data_str: str) -> bool:
 
 def process_csv_file(trading_data_str: str) -> Dict:
     dict_info = {
-        INITIAL_CAPITAL_USD: 15_000,
-        CAPITAL_PORTIONS: 15,
-        MAX_PERCENTAGE_DECLINE: 4,
-        OPEN: [],
-        CLOSE: [],
-        TIMESTAMP: []
+        OPEN_PRICE_KEY: [],
+        CLOSE_PRICE_KEY: [],
+        TIMESTAMP_KEY: []
     }
     if trading_data_str is None:
         return dict_info
@@ -45,10 +37,9 @@ def process_csv_file(trading_data_str: str) -> Dict:
         if len(trading_data_arr[i]) == 0:
             continue
         split_line = trading_data_arr[i].split(",")
-        dict_info[OPEN].append(float(split_line[0]))
-        dict_info[CLOSE].append(float(split_line[1]))
-        dict_info[TIMESTAMP].append(float(split_line[2]))
-
+        dict_info[OPEN_PRICE_KEY].append(float(split_line[0]))
+        dict_info[CLOSE_PRICE_KEY].append(float(split_line[1]))
+        dict_info[TIMESTAMP_KEY].append(convert_binance_timestamp_to_date(float(split_line[2])))
     return dict_info
 
 
