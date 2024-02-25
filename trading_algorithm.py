@@ -24,6 +24,7 @@ def trading_session(price_stats, num_prices, initial_capital, stop_loss_percenta
     num_losing_trades = 0
     net_gain_array = []
     timestamp_arr = []
+    maximum_stop_loss_percentage = float('inf')
     for idx in range(num_prices):
         current_timestamp = price_stats[TIMESTAMP_KEY][idx]
         open_price = price_stats[OPEN_PRICE_KEY][idx]
@@ -34,6 +35,7 @@ def trading_session(price_stats, num_prices, initial_capital, stop_loss_percenta
             tail_order = orders_queue[0]
             order_percentage_difference = (close_price - tail_order.buying_price) * 100 / tail_order.buying_price
             if order_percentage_difference < 0 and abs(order_percentage_difference) > stop_loss_percentage:
+                maximum_stop_loss_percentage = min(maximum_stop_loss_percentage, round(order_percentage_difference, 1))
                 capital_at_the_end, net_gain = execute_oldest_order(capital_at_the_end, capital_per_trade, close_price,
                                                                     current_timestamp, net_gain, orders_queue,
                                                                     tail_order)
@@ -51,10 +53,14 @@ def trading_session(price_stats, num_prices, initial_capital, stop_loss_percenta
         timestamp_arr.append(current_timestamp)
     capital_at_the_end += sum([order.buying_price * order.amount_of_asset_bought for order in orders_queue])
     percentage_profit = round((net_gain * 100 / initial_capital), 2)
+    maximum_stop_loss_percentage_response = maximum_stop_loss_percentage
+    if maximum_stop_loss_percentage == float('inf'):
+        maximum_stop_loss_percentage_response = 'N/A'
     return (f'✅Finished!\n'
             f'Initial capital = {round(initial_capital, 2)}$\n'
             f'Net gain = {round(net_gain, 2)}$\n'
             f'Capital at the end = {round(capital_at_the_end, 2)}$\n'
             f'Capital percentage profit = {percentage_profit}%\n'
             f'Number of profitable trades = {num_profitable_trades}\n'
-            f'Number of losing trades = {num_losing_trades}'), net_gain_array
+            f'Number of losing trades = {num_losing_trades}\n'
+            f'Maximum Stop Loss Percentage Reached = {maximum_stop_loss_percentage_response}'), net_gain_array

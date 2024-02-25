@@ -21,6 +21,11 @@ def send_welcome(message):
 
 @bot.message_handler(content_types=['document'])
 def handle_csv(message):
+    chat_id = message.chat.id
+    if not is_valid_trading_info(USER_INFO[chat_id]):
+        bot.reply_to(message, ENTER_TRADING_INFORMATION_MESSAGE)
+        bot.reply_to(message, VALID_TRADING_INFORMATION_EXAMPLE_MESSAGE, reply_markup=create_menu())
+        return
     if message.document.mime_type.lower() != 'text/csv':
         bot.reply_to(message, 'Please send a valid CSV file.')
         return
@@ -31,7 +36,7 @@ def handle_csv(message):
     if not is_valid_csv_format(file_string):
         bot.reply_to(message, 'Please send a valid CSV file.')
         return
-    chat_id = message.chat.id
+
     csv_trading_data = process_csv_file(file_string)
     financial_info, net_gain_array = trading_session(price_stats=csv_trading_data,
                                                      num_prices=len(csv_trading_data[OPEN_PRICE_KEY]),
