@@ -1,8 +1,7 @@
 # buttons
 DOWNLOAD_CSV_TEMPLATE_BUTTON = "⬇️Download Trading Data CSV Template"
 UPLOAD_TRADING_DATA_CSV_BUTTON = "⬆️Upload Trading Data CSV And Trade"
-TRADE_BUTTON = "💷Trade"
-ENTER_TRADING_INFORMATION_BUTTON = "💱Enter Trading Information"
+TRADE_BUTTON = "💷Trade On Binance 1 Day Candles"
 
 # user messages
 ENTER_TRADING_INFORMATION_MESSAGE = ("Enter valid trading information.\n"
